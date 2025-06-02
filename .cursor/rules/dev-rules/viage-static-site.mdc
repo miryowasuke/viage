@@ -1,0 +1,160 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# viage ネイル販売会社 静的サイト開発ルール
+
+## 1. プロジェクト構造
+
+```
+/
+├── pages/                # Next.js Pages Router（静的エクスポート前提）
+│   ├── index.tsx         # トップページ
+│   ├── about.tsx         # 会社情報
+│   ├── products.tsx      # 商品一覧
+│   ├── contact.tsx       # お問い合わせ（外部サービス埋め込み可）
+│   └── _app.tsx          # グローバル設定
+├── components/
+│   ├── ui/               # 汎用UIコンポーネント
+│   ├── sections/         # ページセクション
+│   └── forms/            # フォーム（必要に応じて）
+├── styles/
+│   └── globals.css       # Tailwind CSS
+├── public/               # 画像・静的ファイル（WebP推奨・事前最適化）
+├── types/                # 型定義
+├── lib/                  # ユーティリティ・バリデーション
+└── README.md
+```
+
+- Next.js標準の`next/image`, `next/link`, `next/script`は**使用禁止**。  
+  画像は`<img>`、リンクは`<a>`で実装。
+- Cloudflare Pagesの静的エクスポート（`next export`）を必ず利用。
+- デプロイはGitHub連携で自動化。
+
+---
+
+## 2. コーディング規約
+
+- **TypeScript**を必須とし、型安全を徹底。
+- **Tailwind CSS**でスタイリング。カスタムCSSは最小限。
+- **SEO対策**として、各ページで`<head>`にtitle/description/OGP/meta/JSON-LDを適切に記述。
+- **レスポンシブ対応**は必須。モバイルファーストで設計。
+- 画像は**WebP形式**・**圧縮済み**を`public/`に配置し、`<img>`でalt属性を必ず付与。
+- お問い合わせフォームは**外部サービス埋め込み**（例：Googleフォーム、formrun等）を推奨。個人情報の取扱いに注意。
+
+---
+
+## 3. UI/UX設計
+
+- シンプルで直感的なUI。余白・フォント・配色はブランドイメージに合わせて設計。
+- 商品画像を大きく・美しく見せるレイアウトを優先。
+- 企業情報・連絡先は**常に分かりやすい場所**に表示。
+- ページ遷移は迷わない導線設計。グローバルナビゲーションを設置。
+- アクセシビリティ（alt属性、コントラスト、フォーカス管理等）も配慮。
+
+---
+
+## 4. SEO・パフォーマンス
+
+- 各ページで**title/description/OGP/meta/JSON-LD**を適切に設定。
+- 画像は**遅延読み込み（loading="lazy"）**を活用。
+- Cloudflare CDNによる配信を前提とし、**Lighthouseスコア90点以上**を目指す。
+- 画像・CSS・JSは**最小限・圧縮済み**で管理。
+- サイトマップ・robots.txtも用意。
+
+---
+
+## 5. 開発運用・管理
+
+- **GitHub**でバージョン管理。mainブランチへのPRベース運用。
+- **Cursor**で開発メモ・ルール・設計書を`.cursor/rules/`配下で管理。
+- 画像最適化は**ImageOptim/Squoosh等の外部ツール**で事前に行う。
+- **Obsidian**等でナレッジベースを構築し、要件・議事録・FAQを整理。
+- 曖昧な仕様や未確定事項は`🚧`マークで明示し、後日必ず確認。
+
+---
+
+## 6. セキュリティ・法令順守
+
+- 画像・テキスト等の著作権・肖像権を必ず確認。
+- お問い合わせフォーム等で取得した個人情報は**法令順守**で管理。
+- サイト利用規約・プライバシーポリシーを必要に応じて設置。
+
+---
+
+## 7. チェックリスト
+
+- [ ] 会社情報・商品情報が整理されている
+- [ ] SEO対策（meta/OGP/JSON-LD）が実装されている
+- [ ] レスポンシブ対応ができている
+- [ ] 画像が最適化・WebP化されている
+- [ ] お問い合わせフォームが設置されている
+- [ ] Cloudflare Pagesで静的デプロイできる
+- [ ] GitHubで履歴管理されている
+- [ ] 法令順守・著作権配慮がなされている
+
+---
+
+## 8. 禁止事項・アンチパターン
+
+- Next.jsのApp Router/Server Components/next/image/next/link/next/scriptの利用
+- クライアントサイドでのみ動作するJS依存のUI
+- 未圧縮・未最適化の画像アップロード
+- SEOメタ情報の未設定
+- 個人情報の不用意な取得・管理
+
+---
+
+## 9. サンプルSEOヘッダー
+
+```tsx
+// pages/index.tsx
+import Head from "next/head";
+
+export default function Home() {
+  return (
+    <>
+      <Head>
+        <title>指先からはじまる、あなたの物語 | 株式会社ヴィアージュ</title>
+        <meta name="description" content="ネイル用品・美容商品の企画・販売。サロン品質をもっと手軽に。株式会社ヴィアージュ公式サイト。" />
+        <meta property="og:title" content="指先からはじまる、あなたの物語 | 株式会社ヴィアージュ" />
+        <meta property="og:description" content="ネイル用品・美容商品の企画・販売。サロン品質をもっと手軽に。" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/ogp.jpg" />
+        <meta property="og:url" content="https://viage.jp/" />
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "株式会社ヴィアージュ",
+            "url": "https://viage.jp/",
+            "logo": "https://viage.jp/logo.png",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+81-3-xxxx-xxxx",
+              "contactType": "customer service"
+            }
+          }
+        `}</script>
+      </Head>
+      {/* ...ページ内容... */}
+    </>
+  );
+}
+```
+
+---
+
+## 10. 参考
+
+- [Next.js公式 静的エクスポート](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports)
+- [Cloudflare Pages公式](https://developers.cloudflare.com/pages/)
+- [Tailwind CSS公式](https://tailwindcss.com/)
+- [SEOベストプラクティス](https://web.dev/seo/)
+- [参考Cursor Rules](https://github.com/Shin-sibainu/shincode-tech-stack-rules/blob/main/.cursor/rules/dev-rules/nextjs.mdc)
+
+---
+
+**このルールは`.cursor/rules/dev-rules/viage-static-site.mdc`等に保存し、プロジェクト全体で遵守してください。**
+ご不明点や追加要件があれば`🚧`マークで追記し、都度見直しを行ってください。
