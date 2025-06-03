@@ -11,17 +11,7 @@ export default function MainVisual() {
         style={{ filter: "brightness(0.85)" }}
       />
       {/* ロゴ・ナビゲーション */}
-      <header className="absolute top-0 left-0 w-full flex justify-between items-center px-8 py-6 z-10">
-        <div className="text-white font-bold tracking-widest text-lg drop-shadow-lg">
-          VIAGE NAIL SALON
-        </div>
-        <a
-          href="#shop"
-          className="bg-white/80 text-[#b48a78] rounded-full px-5 py-2 font-semibold shadow hover:bg-white transition"
-        >
-          オンラインショップ
-        </a>
-      </header>
+
       {/* 縦書きテキスト（左） */}
       <div className="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 z-10">
         <div
